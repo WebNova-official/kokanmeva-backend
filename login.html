@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kokan Meva Admin Login</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:linear-gradient(135deg,#2E7D32,#1B5E20);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.login-box{
+
+    background:white;
+    padding:40px;
+    border-radius:10px;
+    width:320px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+input{
+
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:1px solid #ddd;
+    border-radius:5px;
+}
+
+button{
+
+    width:100%;
+    padding:12px;
+    background:#F4A300;
+    border:none;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+button:hover{
+    background:#e69500;
+}
+
+.error{
+
+    color:red;
+    text-align:center;
+    margin-top:10px;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="login-box">
+
+<h2>Admin Login</h2>
+
+<input type="text" id="username" placeholder="Username">
+
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<p class="error" id="error"></p>
+
+</div>
+
+<script>
+
+const ADMIN_USER = "admin";
+
+const ADMIN_PASS = "kokan123";
+
+
+function login(){
+
+    const user = document.getElementById("username").value;
+
+    const pass = document.getElementById("password").value;
+
+
+    if(user === ADMIN_USER && pass === ADMIN_PASS){
+
+        localStorage.setItem("adminLoggedIn","true");
+
+        window.location.href = "admin.html";
+
+    }
+    else{
+
+        document.getElementById("error").innerText="Invalid username or password";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

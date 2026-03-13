@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kokan Meva | Swad Kokancha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        :root {
+            --primary: #2E7D32;
+            --secondary: #F4A300;
+            --bg-cream: #FDF6EC;
+            --white: #ffffff;
+            --text: #333;
+            --footer-dark: #1B3022;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg-cream); color: var(--text); overflow-x: hidden; }
+
+        /* --- SHIPPING BANNER --- */
+        .shipping-banner {
+            background: var(--primary); color: white; text-align: center;
+            padding: 8px; font-size: 0.85rem; font-weight: 500;
+        }
+
+        /* --- NAVIGATION --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 8%; background: white; position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .logo-group { text-decoration: none; cursor: pointer; }
+        .logo { font-family: 'Amita'; font-size: 1.8rem; color: var(--primary); font-weight: 700; line-height: 1; }
+        .tagline { font-family: 'Amita'; font-size: 0.9rem; color: var(--secondary); display: block; }
+        nav ul { display: flex; list-style: none; gap: 25px; }
+        nav a { text-decoration: none; color: var(--text); font-weight: 500; cursor: pointer; }
+        .cart-btn { background: var(--primary); color: white; border: none; padding: 10px 22px; border-radius: 50px; cursor: pointer; font-weight: 600; }
+
+        /* --- HERO --- */
+        .hero { display: grid; grid-template-columns: 1fr 1fr; padding: 60px 8%; align-items: center; gap: 50px; min-height: 80vh; }
+        .hero-left h1 { font-family: 'Amita'; font-size: clamp(2.5rem, 5vw, 4rem); color: var(--primary); line-height: 1.1; }
+        .hero-right img { 
+            width: 100%; max-width: 550px; height: 450px; object-fit: cover; 
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; 
+            box-shadow: 20px 20px 0px var(--secondary);
+            animation: floatMango 5s ease-in-out infinite;
+            transition: opacity 0.4s ease-in-out; /* Added smooth fade transition */
+        }
+        @keyframes floatMango { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
+
+        /* --- CATEGORY NAVIGATION --- */
+        .category-nav { display: flex; justify-content: center; gap: 10px; padding: 20px; background: white; position: sticky; top: 70px; z-index: 999; overflow-x: auto; }
+        .cat-tab { padding: 8px 20px; border-radius: 20px; border: 1px solid var(--primary); color: var(--primary); cursor: pointer; transition: 0.3s; white-space: nowrap; }
+        .cat-tab.active { background: var(--primary); color: white; }
+
+        /* --- PRODUCTS --- */
+        .store { padding: 40px 8%; text-align: center; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; }
+        .card { background: white; border-radius: 20px; padding: 15px; text-align: left; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 15px; margin-bottom: 10px;}
+        .card .weight { font-size: 0.75rem; color: var(--secondary); font-weight: 700; }
+        .add-btn { width: 100%; padding: 10px; background: var(--bg-cream); color: var(--primary); border: none; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+
+        /* --- ABOUT US --- */
+        /* ---------------- ABOUT SECTION ---------------- */
+
+/* ---------------- ABOUT SECTION ---------------- */
+
+:root {
+    --konkan-orange: #e67e22;
+    --konkan-dark: #2c3e50;
+    --konkan-text: #555;
+    --konkan-bg: #fdfbf8; /* Warm, creamy background */
+}
+
+.about {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    padding: 100px 10%;
+    background-color: var(--konkan-bg);
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+
+.about-img {
+    position: relative;
+    width: 450px;
+    padding: 20px;
+}
+
+/* Main Image - Large & Stylized */
+.img-main {
+    width: 100%;
+    height: auto;
+    border-radius: 30px 100px 30px 30px; /* Organic leaf-like shape */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+    transition: transform 0.5s ease;
+}
+
+/* Overlay Image - Floating Card style */
+.img-overlay {
+    width: 65%;
+    position: absolute;
+    bottom: -20px;
+    right: -30px;
+    z-index: 2;
+    border: 8px solid #fff;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    animation: floatImage 4s ease-in-out infinite;
+}
+
+@keyframes floatImage {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* About Text Styling */
+.about-text {
+    flex: 1;
+    max-width: 550px;
+}
+
+.about-text h2 {
+    font-size: 42px;
+    color: var(--konkan-dark);
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+/* Decorative Underline for the Title */
+.about-text h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 60%;
+    height: 4px;
+    background: var(--konkan-orange);
+    border-radius: 2px;
+}
+
+.about-desc {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    line-height: 1.8;
+    color: var(--konkan-text);
+}
+
+/* Subtle Hover Effect */
+.about:hover .img-main {
+    transform: scale(1.02);
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+
+@media (max-width: 992px) {
+    .about {
+        gap: 40px;
+    }
+    
+    .about-img {
+        width: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about {
+        flex-direction: column;
+        text-align: center;
+        padding: 60px 5%;
+    }
+
+    .about-text h2 {
+        font-size: 34px;
+    }
+
+    .about-text h2::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .about-img {
+        width: 85%;
+        margin-bottom: 40px;
+    }
+
+    .img-overlay {
+        bottom: -15px;
+        right: 0;
+        width: 60%;
+    }
+}/* ---------------- ABOUT SECTION ---------------- */
+
+:root {
+    --konkan-orange: #e67e22;
+    --konkan-dark: #2c3e50;
+    --konkan-text: #555;
+    --konkan-bg: #fdfbf8; /* Warm, creamy background */
+}
+
+.about {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    padding: 100px 10%;
+    background-color: var(--konkan-bg);
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+
+.about-img {
+    position: relative;
+    width: 450px;
+    padding: 20px;
+}
+
+/* Main Image - Large & Stylized */
+.img-main {
+    width: 100%;
+    height: auto;
+    border-radius: 30px 100px 30px 30px; /* Organic leaf-like shape */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+    transition: transform 0.5s ease;
+}
+
+/* Overlay Image - Floating Card style */
+.img-overlay {
+    width: 65%;
+    position: absolute;
+    bottom: -20px;
+    right: -30px;
+    z-index: 2;
+    border: 8px solid #fff;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    animation: floatImage 4s ease-in-out infinite;
+}
+
+@keyframes floatImage {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* About Text Styling */
+.about-text {
+    flex: 1;
+    max-width: 550px;
+}
+
+.about-text h2 {
+    font-size: 42px;
+    color: var(--konkan-dark);
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+/* Decorative Underline for the Title */
+.about-text h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 60%;
+    height: 4px;
+    background: var(--konkan-orange);
+    border-radius: 2px;
+}
+
+.about-desc {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    line-height: 1.8;
+    color: var(--konkan-text);
+}
+
+/* Subtle Hover Effect */
+.about:hover .img-main {
+    transform: scale(1.02);
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+
+@media (max-width: 992px) {
+    .about {
+        gap: 40px;
+    }
+    
+    .about-img {
+        width: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about {
+        flex-direction: column;
+        text-align: center;
+        padding: 60px 5%;
+    }
+
+    .about-text h2 {
+        font-size: 34px;
+    }
+
+    .about-text h2::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .about-img {
+        width: 85%;
+        margin-bottom: 40px;
+    }
+
+    .img-overlay {
+        bottom: -15px;
+        right: 0;
+        width: 60%;
+    }
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+
+@media (max-width: 768px) {
+
+    .about {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        width: 300px;
+    }
+
+    .img-overlay {
+        bottom: -20px;
+        right: -20px;
+        width: 65%;
+    }
+}
+        /* --- CHECKOUT --- */
+        #checkoutPage { display: none; padding: 40px 8%; background: var(--bg-cream); min-height: 100vh; }
+        .checkout-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px; max-width: 1200px; margin: auto; }
+        .box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-top: 5px; }
+
+        /* --- FOOTER --- */
+        footer {
+            background:#1B3022;
+            color:#eee;
+            padding:50px 8% 20px;
+            margin-top:50px;
+        }
+
+        .footer-container {
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:30px;
+            margin-bottom:30px;
+        }
+
+        .footer-logo {
+            font-family:'Amita';
+            color:#F4A300;
+            font-size:24px;
+        }
+
+        .footer-col h4 {
+            color:#F4A300;
+            margin-bottom:10px;
+        }
+
+        .footer-col p {
+            margin:5px 0;
+            font-size:14px;
+        }
+
+        .footer-col a {
+            color:#F4A300;
+            text-decoration:none;
+        }
+
+        .footer-col a:hover {
+            text-decoration:underline;
+        }
+
+        .footer-bottom {
+            text-align:center;
+            border-top:1px solid rgba(255,255,255,0.1);
+            padding-top:15px;
+            font-size:14px;
+            color:#bbb;
+        }
+
+        /* --- CART SIDEBAR --- */
+        .cart-sidebar { position: fixed; top: 0; right: -100%; width: 380px; height: 100%; background: white; z-index: 2000; transition: 0.4s; padding: 30px; display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1); }
+        .cart-sidebar.active { right: 0; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .blur-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1500; visibility: hidden; opacity: 0; transition: 0.3s; backdrop-filter: blur(4px); }
+        .blur-bg.active { visibility: visible; opacity: 1; }
+
+        .toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #2E7D32;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+    transition: all 0.3s ease;
+    z-index: 9999;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+    </style>
+</head>
+<body>
+
+    <div class="shipping-banner">🚚 Free Delivery on orders above ₹999 (India Only)</div>
+    <div class="blur-bg" id="blurBg" onclick="toggleCart()"></div>
+
+    <header>
+        <div class="logo-group" onclick="goHome()">
+            <div class="logo">Kokan Meva</div>
+            <div class="tagline">स्वाद कोकणचा</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a onclick="goHome()">Home</a></li>
+                <li><a href="#store">Store</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </nav>
+        <button class="cart-btn" onclick="toggleCart()">🛒 Bag (<span id="cartCount">0</span>)</button>
+    </header>
+
+    <main id="mainContent">
+        <section class="hero" id="home">
+            <div class="hero-left">
+                <h1>Straight From <br>The Red Soil.</h1>
+                <p class="hero-tagline">
+                    Authentic Kokan flavors delivered to your doorstep.<br>
+                    From our sun-kissed orchards to your kitchen.
+                </p>
+            </div>
+            <div class="hero-right">
+                <img id="heroImage" src="https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=800&q=80">
+            </div>
+        </section>
+
+        <div class="category-nav">
+            <div class="cat-tab active" onclick="filterProducts('all')">All Products</div>
+            <div class="cat-tab" onclick="filterProducts('sharbats')">Sharbats</div>
+            <div class="cat-tab" onclick="filterProducts('pickles')">Pickles</div>
+            <div class="cat-tab" onclick="filterProducts('flours')">Flours</div>
+            <div class="cat-tab" onclick="filterProducts('snacks')">Snacks</div>
+        </div>
+
+        <section class="store" id="store">
+            <div class="product-grid" id="productGrid"></div>
+        </section>
+
+        <section class="about" id="about">
+
+    <div class="about-img">
+    <img src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?auto=format&fit=crop&w=800&q=80" class="img-main">
+    <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=800&q=80" class="img-overlay">
+    <div class="experience-badge">
+        
+    </div>
+</div>
+
+    <div class="about-text">
+        <h2>स्वाद कोकणचा</h2>
+        <p class="about-desc">
+            At Kokan Meva, we bring you authentic flavors straight from the heart of Konkan.
+            We work directly with local farmers and home producers to deliver pure,
+            chemical-free, and traditionally prepared delicacies to your home.
+        </p>
+        <p class="about-desc">
+            Every product carries the essence of Konkan’s rich soil, coastal climate,
+            and generations of traditional recipes.
+        </p>
+    </div>
+
+</section>
+        
+        <footer>
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h3 class="footer-logo">🥭 Kokan Meva</h3>
+                    <p>Authentic flavors from Konkan, delivered fresh to your home.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <p>📍 Lonavala, Maharashtra</p>
+                    <p>📞 +91 80879 40030</p>
+                    <p>📧 kokanmeva@gmail.com</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <p>
+                        📸 Instagram: 
+                        <a href="https://instagram.com/kokanmeva" target="_blank">
+                            @kokanmeva
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © 2026 Kokan Meva. All Rights Reserved.<br>
+                Designed & Developed by <b>WebNova</b>
+            </div>
+        </footer>
+    </main>
+
+    <div id="checkoutPage">
+        <button onclick="goHome()" style="margin-bottom:20px; cursor:pointer; border:none; background:none; font-weight:600; color:var(--primary);">← Back to Store</button>
+        <div class="checkout-grid">
+            <div class="box">
+                <h2 style="margin-bottom:20px; font-family:'Amita';">Billing Address</h2>
+                
+                <div class="form-row">
+                    <div><label>First name</label><input type="text" id="fName"></div>
+                    <div><label>Last name</label><input type="text" id="lName"></div>
+                </div>
+                <label>Address</label><input type="text" id="cAddress">
+                <label>Apartment, suite, etc. (optional)</label><input type="text" id="cApartment">
+                <div class="form-row">
+                    <div><label>City</label><input type="text" id="cCity"></div>
+                    <div><label>State</label><select><option>Maharashtra</option></select></div>
+                    <div><label>PIN code</label><input type="text" id="cPincode"></div>
+                </div>
+                <label>Phone</label>
+<input type="text" id="cPhone" required>
+
+<label>Email</label>
+<input type="email" id="cEmail" required>
+            </div>
+            <div class="box">
+                <h2 style="margin-bottom:20px; font-family:'Amita';">Order Summary</h2>
+                <div id="summaryItems"></div>
+                <hr style="margin:15px 0; opacity:0.1;">
+                <div style="display:flex; justify-content:space-between;"><span>Subtotal</span><span id="sumSub">₹0</span></div>
+                <div style="display:flex; justify-content:space-between; margin:5px 0;"><span>Shipping</span><span id="sumShip">₹100</span></div>
+                <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.2rem; margin-top:10px; color:var(--primary);"><span>Total</span><span id="sumTotal">₹0</span></div>
+                <button onclick="startPayment()" style="width:100%; padding:15px; background:var(--secondary); color:white; border:none; border-radius:10px; font-weight:700; cursor:pointer; margin-top:20px;">Pay with Razorpay</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <h3>Your Bag</h3><hr style="margin:15px 0; opacity:0.1;">
+        <div id="cartItemsList" style="flex:1; overflow-y:auto;"></div>
+        <div style="border-top:1px solid #eee; padding-top:20px;">
+            <div style="display:flex; justify-content:space-between; font-weight:700;"><span>Subtotal:</span><span id="cartTotal">₹0</span></div>
+            <p id="shippingHint" style="font-size:0.75rem; color:#777; margin:10px 0;"></p>
+            <button onclick="openCheckout()" style="width:100%; padding:15px; background:var(--secondary); color:white; border:none; border-radius:10px; cursor:pointer; font-weight:700;">Proceed to Checkout</button>
+        </div>
+    </div>
+
+   <script>
+
+const API = "http://localhost:5000/api";
+
+let products = [];
+let cart = [];
+
+/* ================= LOAD PRODUCTS ================= */
+
+async function loadProducts() {
+    try {
+        const res = await fetch(API + "/products/all");
+        products = (await res.json()).map(p => ({
+    ...p,
+    stock: p.totalStock ?? 0
+}));
+        renderProducts();
+    } catch (err) {
+        console.error("Product load failed", err);
+    }
+}
+
+/* ================= RENDER PRODUCTS ================= */
+
+function renderProducts(filter = "all") {
+
+    const grid = document.getElementById("productGrid");
+
+    let items = products;
+
+    if (filter !== "all") {
+        items = products.filter(p => p.category === filter);
+    }
+
+grid.innerHTML = items.map(p => {
+
+const imageUrl = p.image
+? "http://localhost:5000/uploads/" + p.image
+: "https://via.placeholder.com/300";
+
+return `
+<div class="card">
+
+<img src="${imageUrl}" alt="${p.name}">
+
+<span class="weight">
+${p.stock <= 0
+? '<span style="color:red;font-weight:600">Out of Stock</span>'
+: `Stock: ${p.stock}`}
+</span>
+
+<h3>${p.name}</h3>
+<p>₹${p.sellPrice}</p>
+
+<button class="add-btn"
+onclick="addToCart('${p._id}')"
+${p.stock <= 0 ? "disabled" : ""}>
+Add to Bag
+</button>
+
+</div>
+`;
+
+}).join("");
+}
+/* ================= FILTER ================= */
+
+function filterProducts(cat) {
+    document.querySelectorAll(".cat-tab").forEach(t => t.classList.remove("active"));
+    event.target.classList.add("active");
+    renderProducts(cat);
+}
+
+/* ================= ADD TO CART ================= */
+
+function addToCart(id) {
+
+    const product = products.find(p => p._id === id);
+
+    if (!product || (product.totalStock ?? 0) <= 0) {
+        showToast("Out of stock");
+        return;
+    }
+
+    const existing = cart.find(i => i.id === id);
+
+    if (existing) {
+        if (existing.qty < product.stock) {
+            existing.qty++;
+        } else {
+            showToast("No more stock available");
+        }
+    } else {
+        cart.push({
+            id: product._id,
+            name: product.name,
+            price: product.sellPrice,
+            qty: 1
+        });
+    }
+
+    updateCart();
+}
+
+/* ================= CHANGE QTY ================= */
+
+function changeQty(id, delta) {
+
+    const item = cart.find(i => i.id === id);
+    const product = products.find(p => p._id === id);
+
+    if (!item || !product) return;
+
+    item.qty += delta;
+
+    if (item.qty > product.totalStock) {
+        item.qty = product.stock;
+        showToast("Stock limit reached");
+    }
+
+    if (item.qty <= 0) {
+        cart = cart.filter(i => i.id !== id);
+    }
+
+    updateCart();
+}
+
+/* ================= UPDATE CART ================= */
+
+function updateCart() {
+
+    const sub = cart.reduce((t, i) => t + (i.price * i.qty), 0);
+
+    document.getElementById("cartCount").innerText =
+        cart.reduce((t, i) => t + i.qty, 0);
+
+    document.getElementById("cartTotal").innerText = "₹" + sub;
+
+    document.getElementById("cartItemsList").innerHTML =
+        cart.map(i => `
+            <div class="cart-item">
+                <div>
+                    <span>${i.name}</span>
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="changeQty('${i.id}',-1)">-</button>
+                        ${i.qty}
+                        <button onclick="changeQty('${i.id}',1)">+</button>
+                    </div>
+                </div>
+                <b>₹${i.price * i.qty}</b>
+            </div>
+        `).join("");
+
+    updateShippingHint(sub);
+}
+
+/* ================= SHIPPING ================= */
+
+function updateShippingHint(sub) {
+
+    const hint = document.getElementById("shippingHint");
+
+    if (sub > 0 && sub < 999) {
+        hint.innerHTML = `Add ₹${999 - sub} more for FREE delivery!`;
+    } else if (sub >= 999) {
+        hint.innerHTML = "🎉 FREE Delivery unlocked!";
+    } else {
+        hint.innerHTML = "";
+    }
+}
+
+/* ================= CHECKOUT ================= */
+
+function openCheckout() {
+
+    if (cart.length === 0) {
+        showToast("Empty bag!");
+        return;
+    }
+
+    toggleCart();
+
+    document.getElementById("mainContent").style.display = "none";
+    document.getElementById("checkoutPage").style.display = "block";
+
+    const subtotal = cart.reduce((t, i) => t + (i.price * i.qty), 0);
+    const shipping = subtotal >= 999 ? 0 : 100;
+
+    document.getElementById("sumSub").innerText = "₹" + subtotal;
+    document.getElementById("sumShip").innerText = shipping === 0 ? "FREE" : "₹100";
+    document.getElementById("sumTotal").innerText = "₹" + (subtotal + shipping);
+
+    document.getElementById("summaryItems").innerHTML =
+        cart.map(i => `
+            <div style="display:flex; justify-content:space-between;">
+                <span>${i.name} x${i.qty}</span>
+                <span>₹${i.price * i.qty}</span>
+            </div>
+        `).join("");
+}
+
+/* ================= PAYMENT FLOW ================= */
+
+async function startPayment() {
+
+    if (cart.length === 0) {
+        showToast("Cart is empty");
+        return;
+    }
+
+    // 🔹 Collect Customer Details
+    const firstName = document.getElementById("fName").value.trim();
+    const lastName = document.getElementById("lName").value.trim();
+    const phone = document.getElementById("cPhone").value.trim();
+    const email = document.getElementById("cEmail").value.trim();
+    const address = document.getElementById("cAddress").value.trim();
+    const apartment = document.getElementById("cApartment").value.trim();
+    const city = document.getElementById("cCity").value.trim();
+    const pincode = document.getElementById("cPincode").value.trim();
+
+    const fullName = firstName + " " + lastName;
+
+    // 🔹 Basic Validation
+    if (!firstName || !phone || !email) {
+        showToast("Please fill required fields (Name, Phone, Email)");
+        return;
+    }
+
+    // 🔹 Disable Pay Button (Prevent double payment)
+    const payBtn = event.target;
+    payBtn.disabled = true;
+    payBtn.innerText = "Processing...";
+
+    const subtotal = cart.reduce((t, i) => t + (i.price * i.qty), 0);
+    const shipping = subtotal >= 999 ? 0 : 100;
+    const total = subtotal + shipping;
+
+    try {
+
+        /* STEP 1 → CREATE ORDER */
+        const createRes = await fetch(API + "/orders/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                total,
+                items: cart.map(i => ({
+                    productId: i.id,
+                    quantity: i.qty
+                }))
+            })
+        });
+
+        const createData = await createRes.json();
+
+        if (!createData.success) {
+            showToast(createData.error || "Order creation failed");
+            payBtn.disabled = false;
+            payBtn.innerText = "Pay with Razorpay";
+            return;
+        }
+
+        /* STEP 2 → OPEN RAZORPAY */
+        const options = {
+           key: createData.key,
+            amount: createData.order.amount,
+            currency: "INR",
+            order_id: createData.order.id,
+            name: "Kokan Meva",
+            description: "Order Payment",
+
+           handler: async function (response) {
+
+    const verifyRes = await fetch(API + "/orders/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            customer: {
+                name: fullName,
+                phone,
+                email,
+                address,
+                apartment,
+                city,
+                pincode
+            },
+            items: cart.map(i => ({
+                productId: i.id,
+                quantity: i.qty
+            })),
+            subtotal,
+            shipping,
+            total
+        })
+    });
+
+    const verifyData = await verifyRes.json();
+
+    if (verifyData.success) {
+        showToast("Invoice sent to your email 🎉");
+        cart = [];
+        updateCart();
+        goHome();
+        loadProducts();
+    } else {
+        showToast("Payment verification failed");
+    }
+
+    payBtn.disabled = false;
+    payBtn.innerText = "Pay with Razorpay";
+},
+
+            theme: { color: "#2E7D32" }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+    } catch (err) {
+        console.error(err);
+        showToast("Something went wrong");
+        payBtn.disabled = false;
+        payBtn.innerText = "Pay with Razorpay";
+    }
+}
+
+/* ================= HOME ================= */
+
+function goHome() {
+    document.getElementById("mainContent").style.display = "block";
+    document.getElementById("checkoutPage").style.display = "none";
+}
+
+/* ================= CART TOGGLE ================= */
+
+function toggleCart() {
+    document.getElementById("cartSidebar").classList.toggle("active");
+    document.getElementById("blurBg").classList.toggle("active");
+}
+
+/* ================= INIT ================= */
+
+loadProducts();
+setInterval(loadProducts, 20000);
+
+/* ================= TOAST ================= */
+
+function showToast(message) {
+
+    const toast = document.getElementById("toast");
+
+    if (!toast) return;
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 3000);
+}  
+
+</script>
+<div id="toast" class="toast"></div>
+</body>
+</html>
