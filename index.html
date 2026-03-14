@@ -808,7 +808,7 @@ async function startPayment() {
     }
 
     // 🔹 Disable Pay Button (Prevent double payment)
-    const payBtn = event.target;
+   const payBtn = document.querySelector("button[onclick='startPayment()']");
     payBtn.disabled = true;
     payBtn.innerText = "Processing...";
 

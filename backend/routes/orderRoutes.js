@@ -170,7 +170,7 @@ key:process.env.RAZORPAY_KEY_ID
 
 }catch(err){
 
-console.error("Create Order Error:", err.message);
+console.error("Create Order Error:", err);
 
 res.status(500).json({
 success:false,
