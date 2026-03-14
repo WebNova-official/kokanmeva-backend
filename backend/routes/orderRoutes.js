@@ -275,8 +275,8 @@ status:"Paid"
 
 await newOrder.save();
 
-await sendInvoice(newOrder);
-await sendAdminNotification(newOrder);
+sendInvoice(newOrder).catch(console.error);
+sendAdminNotification(newOrder).catch(console.error);
 
 res.json({
 success:true,
