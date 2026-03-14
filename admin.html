@@ -891,7 +891,7 @@ padding-right:5px;
 
 <script>
 
-const API = "http://localhost:5000/api";
+const API = "https://kokanmeva-backend.onrender.com/api";
 
 let products = [];
 let orders = [];
@@ -1021,8 +1021,8 @@ if(profitEl) profitEl.innerText = `₹${potentialProfit.toLocaleString()}`;
 
         container.innerHTML=products.map(p=>{
 
-           const imageUrl = p.image
-? `http://localhost:5000/uploads/${p.image}`
+          const imageUrl = p.image
+? `https://kokanmeva-backend.onrender.com/uploads/${p.image}`
 : "";
 
             const profit=Number(p.sellPrice||0)-Number(p.buyPrice||0);
