@@ -582,7 +582,7 @@
 
    <script>
 
-const API = "http://localhost:5000/api";
+const API = "https://kokanmeva-backend.onrender.com/api";
 
 let products = [];
 let cart = [];
@@ -617,9 +617,8 @@ function renderProducts(filter = "all") {
 grid.innerHTML = items.map(p => {
 
 const imageUrl = p.image
-? "http://localhost:5000/uploads/" + p.image
+? "https://kokanmeva-backend.onrender.com/uploads/" + p.image
 : "https://via.placeholder.com/300";
-
 return `
 <div class="card">
 
