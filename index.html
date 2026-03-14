@@ -565,7 +565,9 @@
                 <div style="display:flex; justify-content:space-between;"><span>Subtotal</span><span id="sumSub">₹0</span></div>
                 <div style="display:flex; justify-content:space-between; margin:5px 0;"><span>Shipping</span><span id="sumShip">₹100</span></div>
                 <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.2rem; margin-top:10px; color:var(--primary);"><span>Total</span><span id="sumTotal">₹0</span></div>
-                <button onclick="startPayment()" style="width:100%; padding:15px; background:var(--secondary); color:white; border:none; border-radius:10px; font-weight:700; cursor:pointer; margin-top:20px;">Pay with Razorpay</button>
+                <button id="payBtn" onclick="startPayment()" style="width:100%; padding:15px; background:var(--secondary); color:white; border:none; border-radius:10px; font-weight:700; cursor:pointer; margin-top:20px;">
+Pay with Razorpay
+</button>
             </div>
         </div>
     </div>
@@ -808,7 +810,7 @@ async function startPayment() {
     }
 
     // 🔹 Disable Pay Button (Prevent double payment)
-   const payBtn = document.querySelector("button[onclick='startPayment()']");
+   const payBtn = document.getElementById("payBtn");
     payBtn.disabled = true;
     payBtn.innerText = "Processing...";
 
