@@ -103,19 +103,15 @@ router.post("/add", upload.single("image"), async (req, res) => {
         }
 
         const newProduct = new Product({
-            name: name.trim(),
-            category: category || "General",
-            buyPrice: Number(buyPrice),
-            sellPrice: Number(sellPrice),
-            totalStock: Number(totalStock) || 0,
-            description: description || "",
-            status: status || "public",
-            if (!req.file) {
-    return res.status(400).json({
-        success: false,
-        message: "Image is required"
-    });
-}
+    name: name.trim(),
+    category: category || "General",
+    buyPrice: Number(buyPrice),
+    sellPrice: Number(sellPrice),
+    totalStock: Number(totalStock) || 0,
+    description: description || "",
+    status: status || "public",
+    image: req.file.filename
+});
 
 image: req.file.filename
         });
