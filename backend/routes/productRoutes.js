@@ -6,25 +6,35 @@ const path = require("path");
 const fs = require("fs");
 
 /* ==========================================================
+   ENSURE UPLOADS FOLDER EXISTS (IMPORTANT FIX)
+========================================================== */
+const uploadDir = path.join(__dirname, "..", "uploads");
+
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+/* ==========================================================
    MULTER CONFIG (SECURE IMAGE UPLOAD)
 ========================================================== */
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, "uploads/");
+        cb(null, uploadDir);
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + "-" + file.originalname);
+        const uniqueName = Date.now() + "-" + file.originalname.replace(/\s+/g, "-");
+        cb(null, uniqueName);
     }
 });
 
 const fileFilter = (req, file, cb) => {
     const allowedTypes = [
-    "image/jpeg",
-    "image/png",
-    "image/webp",
-    "image/jpg"
-];
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/jpg"
+    ];
 
     if (allowedTypes.includes(file.mimetype)) {
         cb(null, true);
@@ -35,7 +45,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({
     storage,
-    limits: { fileSize: 5 * 1024 * 1024 },
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
     fileFilter
 });
 
@@ -47,15 +57,19 @@ router.get("/all", async (req, res) => {
         const products = await Product.find().sort({ createdAt: -1 });
         res.json(products);
     } catch (err) {
+        console.error("Fetch Error:", err);
         res.status(500).json({ error: err.message });
     }
 });
 
 /* ==========================================================
-   ADD NEW PRODUCT (WITH BUY PRICE SUPPORT)
+   ADD NEW PRODUCT
 ========================================================== */
 router.post("/add", upload.single("image"), async (req, res) => {
     try {
+        console.log("BODY:", req.body);
+        console.log("FILE:", req.file);
+
         const {
             name,
             buyPrice,
@@ -66,7 +80,7 @@ router.post("/add", upload.single("image"), async (req, res) => {
             status
         } = req.body;
 
-        // Required fields validation
+        // Validation
         if (!name || buyPrice === undefined || sellPrice === undefined) {
             return res.status(400).json({
                 success: false,
@@ -74,11 +88,17 @@ router.post("/add", upload.single("image"), async (req, res) => {
             });
         }
 
-        // Prevent invalid pricing
         if (Number(sellPrice) < Number(buyPrice)) {
             return res.status(400).json({
                 success: false,
                 message: "Sell price cannot be less than buy price"
+            });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "Product image is required"
             });
         }
 
@@ -90,7 +110,7 @@ router.post("/add", upload.single("image"), async (req, res) => {
             totalStock: Number(totalStock) || 0,
             description: description || "",
             status: status || "public",
-            image: req.file ? req.file.filename : ""
+            image: req.file.filename
         });
 
         await newProduct.save();
@@ -108,7 +128,7 @@ router.post("/add", upload.single("image"), async (req, res) => {
 });
 
 /* ==========================================================
-   UPDATE PRODUCT (WITH BUY PRICE + IMAGE REPLACE)
+   UPDATE PRODUCT
 ========================================================== */
 router.put("/update/:id", upload.single("image"), async (req, res) => {
     try {
@@ -123,13 +143,13 @@ router.put("/update/:id", upload.single("image"), async (req, res) => {
 
         // Delete old image if new uploaded
         if (req.file && product.image) {
-            const oldPath = path.join(__dirname, "..", "uploads", product.image);
+            const oldPath = path.join(uploadDir, product.image);
             if (fs.existsSync(oldPath)) {
                 fs.unlinkSync(oldPath);
             }
         }
 
-        // Validate pricing if both provided
+        // Price validation
         if (
             req.body.buyPrice !== undefined &&
             req.body.sellPrice !== undefined &&
@@ -187,7 +207,7 @@ router.put("/update/:id", upload.single("image"), async (req, res) => {
 });
 
 /* ==========================================================
-   DELETE PRODUCT (ALSO DELETE IMAGE)
+   DELETE PRODUCT
 ========================================================== */
 router.delete("/delete/:id", async (req, res) => {
     try {
@@ -201,7 +221,7 @@ router.delete("/delete/:id", async (req, res) => {
         }
 
         if (product.image) {
-            const imagePath = path.join(__dirname, "..", "uploads", product.image);
+            const imagePath = path.join(uploadDir, product.image);
             if (fs.existsSync(imagePath)) {
                 fs.unlinkSync(imagePath);
             }
