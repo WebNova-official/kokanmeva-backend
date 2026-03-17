@@ -102,7 +102,7 @@ router.post("/add", upload.single("image"), async (req, res) => {
             });
         }
 
-        const newProduct = new Product({
+      const newProduct = new Product({
     name: name.trim(),
     category: category || "General",
     buyPrice: Number(buyPrice),
@@ -112,7 +112,6 @@ router.post("/add", upload.single("image"), async (req, res) => {
     status: status || "public",
     image: req.file.filename
 });
-
 image: req.file.filename
         });
 
