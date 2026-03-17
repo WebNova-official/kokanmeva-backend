@@ -110,7 +110,14 @@ router.post("/add", upload.single("image"), async (req, res) => {
             totalStock: Number(totalStock) || 0,
             description: description || "",
             status: status || "public",
-            image: req.file.filename
+            if (!req.file) {
+    return res.status(400).json({
+        success: false,
+        message: "Image is required"
+    });
+}
+
+image: req.file.filename
         });
 
         await newProduct.save();
