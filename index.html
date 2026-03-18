@@ -361,6 +361,44 @@
         width: 60%;
     }
 }
+.img-box img {
+    cursor: pointer; /* shows clickable */
+}
+
+/* IMAGE MODAL */
+.image-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.3s;
+    z-index: 3000;
+}
+
+.image-modal.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.image-modal img {
+    max-width: 90%;
+    max-height: 80%;
+    border-radius: 15px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.close-btn {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+}
 
 /* ---------------- RESPONSIVE ---------------- */
 
@@ -655,7 +693,7 @@ return `
 <div class="card">
 
 <div class="img-box">
-    <img src="${imageUrl}" alt="${p.name}">
+    <img src="${imageUrl}" alt="${p.name}" onclick="openImage('${imageUrl}')">
 </div>
 
 <span class="weight">
@@ -975,8 +1013,34 @@ function showToast(message) {
         toast.classList.remove("show");
     }, 3000);
 }  
+function openImage(src) {
+    const modal = document.getElementById("imageModal");
+    const img = document.getElementById("modalImg");
 
+    img.src = src;
+    modal.classList.add("active");
+}
+
+function closeImage() {
+    document.getElementById("imageModal").classList.remove("active");
+}
+
+/* FIX: Run after page loads */
+window.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("imageModal");
+
+    modal.addEventListener("click", function(e) {
+        if (e.target.id === "imageModal") {
+            closeImage();
+        }
+    });
+});
 </script>
 <div id="toast" class="toast"></div>
+<!-- IMAGE VIEW MODAL -->
+<div id="imageModal" class="image-modal">
+    <span class="close-btn" onclick="closeImage()">×</span>
+    <img id="modalImg">
+</div>
 </body>
 </html>
