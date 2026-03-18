@@ -71,10 +71,10 @@
     transform: translateY(-10px);
     box-shadow: 0 20px 40px rgba(0,0,0,0.12);
 }
-        
         .img-box {
     height: 220px;
-    background: #f9f9f9;
+    width: 100%;
+    background: #f3f3f3;
     border-radius: 15px;
     display: flex;
     align-items: center;
@@ -84,10 +84,9 @@
 }
 
 .img-box img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain; /* 🔥 MOST IMPORTANT */
-    transition: transform 0.4s ease;
+    max-width: 85%;
+    max-height: 85%;
+    object-fit: contain;
 }
 .card:hover .img-box img {
     transform: scale(1.1);
