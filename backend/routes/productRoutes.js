@@ -2,52 +2,30 @@ const express = require("express");
 const router = express.Router();
 const Product = require("../models/Product");
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 /* ==========================================================
-   ENSURE UPLOADS FOLDER EXISTS (IMPORTANT FIX)
+   CLOUDINARY CONFIG
 ========================================================== */
-const uploadDir = path.join(__dirname, "..", "uploads");
-
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_KEY,
+    api_secret: process.env.CLOUD_SECRET,
+});
 
 /* ==========================================================
-   MULTER CONFIG (SECURE IMAGE UPLOAD)
+   MULTER + CLOUDINARY STORAGE
 ========================================================== */
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, uploadDir);
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: "kokan-meva",
+        allowed_formats: ["jpg", "png", "jpeg", "webp"],
     },
-    filename: function (req, file, cb) {
-        const uniqueName = Date.now() + "-" + file.originalname.replace(/\s+/g, "-");
-        cb(null, uniqueName);
-    }
 });
 
-const fileFilter = (req, file, cb) => {
-    const allowedTypes = [
-        "image/jpeg",
-        "image/png",
-        "image/webp",
-        "image/jpg"
-    ];
-
-    if (allowedTypes.includes(file.mimetype)) {
-        cb(null, true);
-    } else {
-        cb(new Error("Only JPG, PNG, WEBP allowed"), false);
-    }
-};
-
-const upload = multer({
-    storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
-    fileFilter
-});
+const upload = multer({ storage });
 
 /* ==========================================================
    GET ALL PRODUCTS
@@ -67,9 +45,6 @@ router.get("/all", async (req, res) => {
 ========================================================== */
 router.post("/add", upload.single("image"), async (req, res) => {
     try {
-        console.log("BODY:", req.body);
-        console.log("FILE:", req.file);
-
         const {
             name,
             buyPrice,
@@ -102,17 +77,15 @@ router.post("/add", upload.single("image"), async (req, res) => {
             });
         }
 
-      const newProduct = new Product({
-    name: name.trim(),
-    category: category || "General",
-    buyPrice: Number(buyPrice),
-    sellPrice: Number(sellPrice),
-    totalStock: Number(totalStock) || 0,
-    description: description || "",
-    status: status || "public",
-    image: req.file.filename
-});
-image: req.file.filename
+        const newProduct = new Product({
+            name: name.trim(),
+            category: category || "General",
+            buyPrice: Number(buyPrice),
+            sellPrice: Number(sellPrice),
+            totalStock: Number(totalStock) || 0,
+            description: description || "",
+            status: status || "public",
+            image: req.file.path, // ✅ Cloudinary URL
         });
 
         await newProduct.save();
@@ -141,14 +114,6 @@ router.put("/update/:id", upload.single("image"), async (req, res) => {
                 success: false,
                 message: "Product not found"
             });
-        }
-
-        // Delete old image if new uploaded
-        if (req.file && product.image) {
-            const oldPath = path.join(uploadDir, product.image);
-            if (fs.existsSync(oldPath)) {
-                fs.unlinkSync(oldPath);
-            }
         }
 
         // Price validation
@@ -183,11 +148,12 @@ router.put("/update/:id", upload.single("image"), async (req, res) => {
                     ? Number(req.body.totalStock)
                     : product.totalStock,
 
-            status: req.body.status || product.status
+            status: req.body.status || product.status,
         };
 
+        // ✅ If new image uploaded → replace
         if (req.file) {
-            updatedData.image = req.file.filename;
+            updatedData.image = req.file.path;
         }
 
         const updatedProduct = await Product.findByIdAndUpdate(
@@ -222,12 +188,7 @@ router.delete("/delete/:id", async (req, res) => {
             });
         }
 
-        if (product.image) {
-            const imagePath = path.join(uploadDir, product.image);
-            if (fs.existsSync(imagePath)) {
-                fs.unlinkSync(imagePath);
-            }
-        }
+        // ❌ No local delete needed (Cloudinary handles storage)
 
         await Product.findByIdAndDelete(req.params.id);
 
