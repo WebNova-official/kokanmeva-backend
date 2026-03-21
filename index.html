@@ -122,8 +122,9 @@
 
 .about-img {
     position: relative;
-    width: 450px;
-    padding: 20px;
+    width: 600px;   /* 🔥 bigger */
+    height: 550px;  /* 🔥 fixed height */
+    padding: 0;
 }
 
 /* Main Image - Large & Stylized */
@@ -260,12 +261,11 @@
 /* Main Image - Large & Stylized */
 .img-main {
     width: 100%;
-    height: auto;
-    border-radius: 30px 100px 30px 30px; /* Organic leaf-like shape */
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 1;
-    transition: transform 0.5s ease;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 30px 100px 30px 30px;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: scale(1);
 }
 
 /* Overlay Image - Floating Card style */
@@ -534,7 +534,7 @@
                 </p>
             </div>
             <div class="hero-right">
-                <img id="heroImage" src="https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=800&q=80">
+                <img id="heroImage" src="amba lonch.jpeg">
             </div>
         </section>
 
@@ -553,8 +553,8 @@
         <section class="about" id="about">
 
     <div class="about-img">
-    <img src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?auto=format&fit=crop&w=800&q=80" class="img-main">
-    <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=800&q=80" class="img-overlay">
+    <img id="aboutImage"  src="मालवणी वडे पीठ.jpeg" class="img-main">
+    
     <div class="experience-badge">
         
     </div>
@@ -563,13 +563,11 @@
     <div class="about-text">
         <h2>स्वाद कोकणचा</h2>
         <p class="about-desc">
-            At Kokan Meva, we bring you authentic flavors straight from the heart of Konkan.
-            We work directly with local farmers and home producers to deliver pure,
-            chemical-free, and traditionally prepared delicacies to your home.
+            कोकण मेवा मध्ये आम्ही तुम्हाला कोकणच्या हृदयातून आलेली अस्सल चव देण्याचा प्रयत्न करतो.
+आमची सर्व उत्पादने रत्नागिरी येथे आमच्याच हस्ते, पारंपरिक पद्धतीने आणि कोणतेही रसायन न वापरता तयार केली जातात.
         </p>
         <p class="about-desc">
-            Every product carries the essence of Konkan’s rich soil, coastal climate,
-            and generations of traditional recipes.
+           कोकणच्या सुपीक लाल मातीचा, समुद्रकिनारी असलेल्या हवामानाचा आणि पिढ्यानपिढ्या चालत आलेल्या पारंपरिक रेसिपींचा खरा स्वाद प्रत्येक उत्पादनात अनुभवायला मिळतो.
         </p>
     </div>
 
@@ -652,7 +650,64 @@ Pay with Razorpay
     </div>
 
    <script>
+/* ================= HERO IMAGE SLIDER ================= */
 
+const heroImages = [
+    "amba lonch.jpeg",
+    "आवळा लोणचं.jpeg",
+    "मिरची लोणचं.jpeg",
+    "मोरावळा.jpeg",
+    "लिंबू लोणचं २०० ग्रॅम.jpeg"
+];
+
+let currentHeroIndex = 0;
+const heroImg = document.getElementById("heroImage");
+
+function changeHeroImage() {
+    currentHeroIndex = (currentHeroIndex + 1) % heroImages.length;
+
+    // Fade out
+    heroImg.style.opacity = 0;
+
+    setTimeout(() => {
+        heroImg.src = heroImages[currentHeroIndex];
+        heroImg.style.opacity = 1;
+    }, 400);
+}
+
+// Change every 3 seconds
+setInterval(changeHeroImage, 3000);
+
+
+/* ================= ABOUT IMAGE SLIDER ================= */
+
+const aboutImages = [
+    "मालवणी वडे पीठ.jpeg",
+    "कुळीथ पीठ.jpeg",
+    "थालीपीठ भाजणी.jpeg",
+    "मेतकूट.jpeg"
+];
+
+let aboutIndex = 0;
+const aboutImg = document.getElementById("aboutImage");
+
+function changeAboutImage() {
+    aboutIndex = (aboutIndex + 1) % aboutImages.length;
+
+    // Step 1: fade out + slight zoom out
+    aboutImg.style.opacity = 0;
+    aboutImg.style.transform = "scale(0.95)";
+
+    setTimeout(() => {
+        // Step 2: change image
+        aboutImg.src = aboutImages[aboutIndex];
+
+        // Step 3: fade in + zoom in
+        aboutImg.style.opacity = 1;
+        aboutImg.style.transform = "scale(1)";
+    }, 500);
+}
+setInterval(changeAboutImage, 3500);
 const API = "https://kokanmeva-backend.onrender.com/api";
 
 let products = [];
